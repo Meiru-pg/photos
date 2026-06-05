@@ -5,65 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Travel Instagram</title>
     <style>
-        /* 기본 스타일 초기화 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* 🎨 테마별 색상 변수 설정 */
+        :root {
+            --bg-color: #fafafa;
+            --header-bg: #ffffff;
+            --text-color: #262626;
+            --text-muted: #737373;
+            --border-color: #dbdbdb;
+            --item-bg: #efefef;
+            --overlay-bg: rgba(0, 0, 0, 0.4);
+            --overlay-text: #ffffff;
+            --overlay-muted: rgba(255, 255, 255, 0.75);
+            
+            --switch-bg: #dbdbdb;
+            --switch-circle: #ffffff;
+            --switch-transform: translateX(0px);
+            
+            /* 모달/팝업 관련 색상 (라이트) */
+            --modal-bg: #ffffff;
+            --modal-sidebar-bg: #ffffff;
+
+            /* 화살표·카운터 색상 (라이트) */
+            --nav-btn-bg: rgba(255, 255, 255, 0.92);
+            --nav-btn-color: #262626;
+            --nav-btn-hover-bg: #ffffff;
+            --nav-btn-shadow: 0 2px 12px rgba(0,0,0,0.18);
         }
+
+        [data-theme="dark"] {
+            --bg-color: #000000;
+            --header-bg: #000000;
+            --text-color: #f5f5f5;
+            --text-muted: #a8a8a8;
+            --border-color: #262626;
+            --item-bg: #121212;
+            --overlay-bg: rgba(0, 0, 0, 0.6);
+            --overlay-text: #ffffff;
+            --overlay-muted: rgba(255, 255, 255, 0.6);
+            
+            --switch-bg: #363636;
+            --switch-circle: #000000;
+            --switch-transform: translateX(24px);
+            
+            /* 모달/팝업 관련 색상 (다크) */
+            --modal-bg: #1c1c1e;
+            --modal-sidebar-bg: #1c1c1e;
+
+            /* 화살표·카운터 색상 (다크) */
+            --nav-btn-bg: rgba(30, 30, 32, 0.92);
+            --nav-btn-color: #f5f5f5;
+            --nav-btn-hover-bg: #2c2c2e;
+            --nav-btn-shadow: 0 2px 12px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #fafafa;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: #262626;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* 상단 프로필 영역 */
         header {
             max-width: 935px;
             margin: 0 auto;
             padding: 40px 20px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid #dbdbdb;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
         }
+
+        .profile-main-content { display: flex; align-items: center; }
 
         .profile-img {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            background-color: #efefef;
+            background-color: var(--item-bg);
             margin-right: 60px;
             overflow: hidden;
+            transition: background-color 0.3s ease;
         }
 
-        .profile-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .profile-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        .profile-title-container { margin-bottom: 15px; }
+
+        .profile-info h1 { font-size: 28px; font-weight: 300; }
+
+        .profile-bio p { font-size: 16px; line-height: 1.5; }
+
+        .profile-bio .bold { font-weight: 600; }
+
+        /* 🎛️ 알약 모양 디자인 스위치 */
+        .theme-toggle-container {
+            display: flex;
+            align-items: center;
+            align-self: flex-start;
+            margin-top: 10px;
         }
 
-        .profile-info h1 {
-            font-size: 28px;
-            font-weight: 300;
-            margin-bottom: 15px;
+        .theme-toggle-btn {
+            background-color: var(--switch-bg);
+            border: none;
+            width: 54px;
+            height: 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            position: relative;
+            padding: 3px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s ease;
         }
 
-        .profile-bio p {
-            font-size: 16px;
-            line-height: 1.5;
+        .theme-toggle-btn::after {
+            content: "";
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--switch-circle);
+            position: absolute;
+            left: 3px;
+            transform: var(--switch-transform);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+            box-shadow: 0px 1px 3px rgba(0,0,0,0.2);
         }
 
-        .profile-bio .bold {
-            font-weight: 600;
-        }
-
-        /* 사진 피드 영역 (인스타그램 3열 그리드) */
-        main {
-            max-width: 935px;
-            margin: 0 auto;
-            padding: 30px 0;
-        }
+        main { max-width: 935px; margin: 0 auto; padding: 30px 0; }
 
         .gallery {
             display: grid;
@@ -74,155 +146,484 @@
         .gallery-item {
             position: relative;
             aspect-ratio: 1 / 1;
-            background-color: #efefef;
+            background-color: var(--item-bg);
             cursor: pointer;
             overflow: hidden;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
         .gallery-item img {
             width: 100%;
             height: 100%;
+            display: block;
             object-fit: cover;
             transition: transform 0.3s ease;
         }
 
-        /* 마우스를 올렸을 때 사진 이름이 뜨는 오버레이 */
         .gallery-item-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* 어두워지는 효과 */
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--overlay-bg);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: #ffffff;
-            font-size: 18px;
-            font-weight: 500;
+            color: var(--overlay-text);
             opacity: 0;
             transition: opacity 0.3s ease;
             padding: 10px;
             text-align: center;
         }
 
-        /* 호버 시 텍스트 나타나고 사진 살짝 확대 */
-        .gallery-item:hover .gallery-item-overlay {
-            opacity: 1;
+        .overlay-title { font-size: 18px; font-weight: 500; margin-bottom: 6px; }
+        .overlay-date  { font-size: 13px; font-weight: 300; color: var(--overlay-muted); }
+
+        .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+        .gallery-item:hover img { transform: scale(1.03); }
+
+        /* ===========================================================
+           🗺️ 2분할 지도 연동 모달(팝업창) 디자인 스타일
+           =========================================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.03);
+        .modal-container {
+            display: flex;
+            width: 100%;
+            max-width: 1000px;
+            height: 80vh;
+            max-height: 700px;
+            background-color: var(--modal-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.25s ease;
+            transition: background-color 0.3s ease;
         }
 
-        /* 반응형 레이아웃 (모바일 화면) */
+        .modal-photo-side {
+            flex: 1.2;
+            background-color: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .modal-photo-side img { width: 100%; height: 100%; object-fit: contain; }
+
+        .modal-info-side {
+            flex: 0.8;
+            background-color: var(--modal-sidebar-bg);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .modal-info-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-info-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+        .modal-info-header p  { font-size: 14px; color: var(--text-muted); }
+
+        .modal-map-container { flex: 1; width: 100%; height: 100%; background-color: var(--item-bg); }
+        .modal-map-container iframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* 닫기 버튼 */
+        .modal-close {
+            position: absolute;
+            top: 20px; right: 25px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: 200;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+            z-index: 1100;
+        }
+        .modal-close:hover { color: #bbb; }
+
+        /* ◀ ▶ 이전/다음 네비게이션 화살표 */
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--nav-btn-bg);
+            color: var(--nav-btn-color);
+            border: none;
+            width: 46px; height: 46px;
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--nav-btn-shadow);
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
+            z-index: 1100;
+            opacity: 0.85;
+            user-select: none;
+        }
+        .modal-nav:hover  { background-color: var(--nav-btn-hover-bg); opacity: 1; transform: translateY(-50%) scale(1.08); }
+        .modal-nav:active { transform: translateY(-50%) scale(0.96); }
+        .modal-nav-prev { left: 18px; }
+        .modal-nav-next { right: 18px; }
+
+        /* 🔢 사진 카운터 */
+        .modal-counter {
+            position: absolute;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--nav-btn-bg);
+            color: var(--nav-btn-color);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 16px;
+            border-radius: 20px;
+            box-shadow: var(--nav-btn-shadow);
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            user-select: none;
+            white-space: nowrap;
+            z-index: 1100;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        /* 📱 모바일 화면 최적화 */
         @media (max-width: 735px) {
-            header {
-                padding: 20px;
-                flex-direction: row;
-            }
-            .profile-img {
-                width: 80px;
-                height: 80px;
-                margin-right: 25px;
-            }
-            .profile-info h1 {
-                font-size: 22px;
-            }
-            .gallery {
-                gap: 3px; /* 모바일 인스타처럼 간격 좁게 */
-            }
-            .gallery-item-overlay {
-                font-size: 14px; /* 모바일에서는 글씨를 작게 */
-            }
+            header { padding: 20px; align-items: flex-start; }
+            .profile-main-content { flex-direction: row; align-items: center; }
+            .profile-img { width: 80px; height: 80px; margin-right: 25px; }
+            .profile-title-container { margin-bottom: 10px; }
+            .profile-info h1 { font-size: 22px; }
+            .theme-toggle-container { margin-top: 5px; }
+            .theme-toggle-btn { width: 46px; height: 26px; }
+            .theme-toggle-btn::after { width: 20px; height: 20px; }
+            [data-theme="dark"] .theme-toggle-btn::after { transform: translateX(20px); }
+            .gallery { gap: 3px; }
+            .overlay-title { font-size: 14px; }
+            .overlay-date  { font-size: 11px; }
+
+            /* 모바일 모달 */
+            .modal-container { flex-direction: column; height: 85vh; }
+            .modal-photo-side { flex: 1; }
+            .modal-info-side  { flex: 1; border-left: none; border-top: 1px solid var(--border-color); }
+            .modal-info-header { padding: 15px; }
+            .modal-info-header h2 { font-size: 16px; }
+
+            /* 모바일 화살표·카운터 */
+            .modal-nav { width: 36px; height: 36px; font-size: 17px; }
+            .modal-nav-prev { left: 8px; }
+            .modal-nav-next { right: 8px; }
+            .modal-counter  { bottom: 12px; font-size: 12px; padding: 5px 12px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="profile-img">
-            <img src="https://lh3.googleusercontent.com/d/1ZNs_E6fbUGhVCxjJj-R_-quPaAAlrHNT" alt="프로필 사진">
-        </div>
-        <div class="profile-info">
-            <h1>@photo_gyeom</h1>
-            <div class="profile-bio">
-                <p class="bold">송대겸</p>
-                <p>여행의 순간을 담다 📷</p>
+        <div class="profile-main-content">
+            <div class="profile-img">
+                <img src="https://lh3.googleusercontent.com/d/1ZNs_E6fbUGhVCxjJj-R_-quPaAAlrHNT" alt="프로필 사진">
             </div>
+            <div class="profile-info">
+                <div class="profile-title-container">
+                    <h1>@photo_gyeom</h1>
+                </div>
+                <div class="profile-bio">
+                    <p class="bold">송대겸</p>
+                    <p>여행의 순간을 담다 📷</p>
+                </div>
+            </div>
+        </div>
+        <div class="theme-toggle-container">
+            <button id="themeToggle" class="theme-toggle-btn" aria-label="테마 변경"></button>
         </div>
     </header>
 
     <main>
         <div class="gallery">
-            
-            <div class="gallery-item">
+
+            <div class="gallery-item" data-location="일본 무도관">
                 <img src="https://lh3.googleusercontent.com/d/1ZNs_E6fbUGhVCxjJj-R_-quPaAAlrHNT" alt="일본 무도관">
-                <div class="gallery-item-overlay">일본 무도관</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">일본 무도관</div>
+                    <div class="overlay-date">2026.02.08</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="오와쿠다니">
                 <img src="https://lh3.googleusercontent.com/d/17xkMx5QLSU6zJMfSfEX11NoX67luKYg7" alt="오와쿠다니">
-                <div class="gallery-item-overlay">오와쿠다니</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">오와쿠다니</div>
+                    <div class="overlay-date">2026.02.10</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="하코네 신사">
                 <img src="https://lh3.googleusercontent.com/d/1dCjDjRaAbTfUEOKd0KrBfoylgysI7w1K" alt="하코네 신사">
-                <div class="gallery-item-overlay">하코네 신사</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">하코네 신사</div>
+                    <div class="overlay-date">2026.02.11</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="하코네 신사 평화의 토리이">
                 <img src="https://lh3.googleusercontent.com/d/1mS1O7-W1Xw_kfiz-mjtghn_cygoNi6W4" alt="평화의 토리이">
-                <div class="gallery-item-overlay">평화의 토리이</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">평화의 토리이</div>
+                    <div class="overlay-date">2026.02.11</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="하코네 고라 공원">
                 <img src="https://lh3.googleusercontent.com/d/15U-ry512N2XNMgbH8WueQlLO8NP_3Oe5" alt="하코네 고라 공원">
-                <div class="gallery-item-overlay">하코네 고라 공원</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">하코네 고라 공원</div>
+                    <div class="overlay-date">2026.02.10</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="하코네유모토역">
                 <img src="https://lh3.googleusercontent.com/d/1EeMICphLeRvwIHR0YPlWpkiKCAdfI2zY" alt="하코네 유모토 역">
-                <div class="gallery-item-overlay">하코네 유모토 역</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">하코네 유모토 역</div>
+                    <div class="overlay-date">2026.02.11</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="고쿄 가이엔">
                 <img src="https://lh3.googleusercontent.com/d/18umUVt9vb7tMSlO8NmN3cYbYOhlrOr78" alt="고쿄 가이엔">
-                <div class="gallery-item-overlay">고쿄 가이엔</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">고쿄 가이엔</div>
+                    <div class="overlay-date">2026.02.08</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
-                <img src="https://lh3.googleusercontent.com/d/1DjTaobXfqUs-zZ3mgQ3BxD6T6kNvl6dX" alt="히가시 공원">
-                <div class="gallery-item-overlay">히가시 공원</div>
+            <div class="gallery-item" data-location="기타노마루 공원">
+                <img src="https://lh3.googleusercontent.com/d/1DjTaobXfqUs-zZ3mgQ3BxD6T6kNvl6dX" alt="기타노마루 공원">
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">기타노마루 공원</div>
+                    <div class="overlay-date">2026.02.08</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="스미다강">
                 <img src="https://lh3.googleusercontent.com/d/1OvH-6v_rfEGexk6Zf6P_IYaom_pi0cBJ" alt="스미다 강">
-                <div class="gallery-item-overlay">스미다 강</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">스미다 강</div>
+                    <div class="overlay-date">2026.02.12</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="도쿄 도청 전망대">
                 <img src="https://lh3.googleusercontent.com/d/1_o61mQxyfIZZZpjG4It2Bn5L-LmxuUtS" alt="도쿄 도청 전망대">
-                <div class="gallery-item-overlay">도쿄 도청 전망대</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">도쿄 도청 전망대</div>
+                    <div class="overlay-date">2026.02.09</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
-                <img src="https://lh3.googleusercontent.com/d/1rgVQzhr24W51x9y_0rizYEcX-B7pRtP6" alt="우에노 공원 앞">
-                <div class="gallery-item-overlay">우에노 공원 앞</div>
+            <div class="gallery-item" data-location="구단시타역">
+                <img src="https://lh3.googleusercontent.com/d/1rgVQzhr24W51x9y_0rizYEcX-B7pRtP6" alt="구단시타 역">
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">구단시타 역</div>
+                    <div class="overlay-date">2026.02.08</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="하나조노 이나리 신사">
                 <img src="https://lh3.googleusercontent.com/d/1K-gq3JMS5br-02XMPHSrUBwBoxvXh4jD" alt="고조텐·하나조노이나리 신사">
-                <div class="gallery-item-overlay">고조텐·하나조노이나리 신사</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">고조텐·하나조노이나리 신사</div>
+                    <div class="overlay-date">2026.02.07</div>
+                </div>
             </div>
 
-            <div class="gallery-item">
+            <div class="gallery-item" data-location="이리야 역">
                 <img src="https://lh3.googleusercontent.com/d/1CvCAxKQ0WUmnq-hefqXTWkNMwy9NS3oz" alt="눈 오는 숙소 앞">
-                <div class="gallery-item-overlay">눈 오는 숙소 앞</div>
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">눈 오는 숙소 앞</div>
+                    <div class="overlay-date">2026.02.08</div>
+                </div>
             </div>
+
+<!-- 
+            ===========================================================
+            📸 [새 여행 사진 추가 가이드 템플릿]
+            -----------------------------------------------------------
+            새로운 여행 사진을 추가하고 싶을 때, 아래의 <div class="gallery-item">부터
+            </div>까지 코드를 고스란히 복사하여 바로 위 사진들 바로 밑에 붙여넣으세요!
+            
+            💡 작성 팁:
+            1. data-location : 구글 지도에 검색될 정확한 명소 이름을 적어주세요.
+            2. img src       : 구글 드라이브나 이미지 저장소의 사진 링크를 넣어주세요.
+            3. overlay-title : 사진 위에 마우스를 올리거나 클릭했을 때 뜰 제목입니다.
+            4. overlay-date  : 촬영한 날짜나 기억하고 싶은 날짜를 적어주세요.
+            ===========================================================
+
+            <div class="gallery-item" data-location="구글지도에 검색할 명소 이름 (예: 도쿄 타워)">
+                <img src="https://lh3.googleusercontent.com/d/구글드라이브사진ID" alt="사진 설명">
+                <div class="gallery-item-overlay">
+                    <div class="overlay-title">새로운 여행지 이름</div>
+                    <div class="overlay-date">2026.00.00</div>
+                </div>
+            </div>
+            -->
 
         </div>
     </main>
 
+    <div id="imageModal" class="modal">
+        <span class="modal-close" id="modalClose">×</span>
+        <button class="modal-nav modal-nav-prev" id="modalPrev" aria-label="이전 사진">&#8249;</button>
+        <button class="modal-nav modal-nav-next" id="modalNext" aria-label="다음 사진">&#8250;</button>
+        <div class="modal-counter" id="modalCounter"></div>
+        <div class="modal-container">
+            <div class="modal-photo-side">
+                <img id="modalImage" src="" alt="확대된 이미지">
+            </div>
+            <div class="modal-info-side">
+                <div class="modal-info-header">
+                    <h2 id="modalTitle">장소 이름</h2>
+                    <p id="modalDate">촬영 날짜</p>
+                </div>
+                <div class="modal-map-container">
+                    <iframe id="modalMap" src="" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal          = document.getElementById("imageModal");
+            const modalImg       = document.getElementById("modalImage");
+            const modalTitle     = document.getElementById("modalTitle");
+            const modalDate      = document.getElementById("modalDate");
+            const modalMap       = document.getElementById("modalMap");
+            const modalCounter   = document.getElementById("modalCounter");
+            const closeBtn       = document.getElementById("modalClose");
+            const prevBtn        = document.getElementById("modalPrev");
+            const nextBtn        = document.getElementById("modalNext");
+            const themeToggleBtn = document.getElementById("themeToggle");
+            const galleryItems   = Array.from(document.querySelectorAll(".gallery-item"));
+            const totalCount     = galleryItems.length; // 📸 사진 추가 시 자동으로 반영
+
+            let currentIndex = -1;
+
+            /* ─────────────────────────────────────────
+               📸 모달 열기
+            ───────────────────────────────────────── */
+            const openModal = (index) => {
+                currentIndex = index;
+                const item     = galleryItems[index];
+                const imgSrc   = item.querySelector("img").src;
+                const title    = item.querySelector(".overlay-title").textContent;
+                const date     = item.querySelector(".overlay-date").textContent;
+                const location = item.getAttribute("data-location");
+
+                modalImg.src           = imgSrc;
+                modalTitle.textContent = title;
+                modalDate.textContent  = date;
+                modalMap.src = `https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=15&ie=UTF-8&iwloc=&output=embed`;
+
+                // 🔢 카운터 업데이트
+                modalCounter.textContent = `${index + 1} / ${totalCount}`;
+
+                modal.style.display = "flex";
+
+                // 첫/마지막 화살표 비활성화
+                prevBtn.style.opacity       = index === 0 ? "0.25" : "0.85";
+                prevBtn.style.pointerEvents = index === 0 ? "none"  : "";
+                nextBtn.style.opacity       = index === galleryItems.length - 1 ? "0.25" : "0.85";
+                nextBtn.style.pointerEvents = index === galleryItems.length - 1 ? "none"  : "";
+            };
+
+            /* ─────────────────────────────────────────
+               ❌ 모달 닫기
+            ───────────────────────────────────────── */
+            const closeModal = () => {
+                modal.style.display = "none";
+                modalMap.src = "";
+                currentIndex = -1;
+            };
+
+            // 갤러리 클릭
+            galleryItems.forEach((item, i) => item.addEventListener("click", () => openModal(i)));
+
+            // 화살표 버튼
+            prevBtn.addEventListener("click", (e) => { e.stopPropagation(); if (currentIndex > 0) openModal(currentIndex - 1); });
+            nextBtn.addEventListener("click", (e) => { e.stopPropagation(); if (currentIndex < galleryItems.length - 1) openModal(currentIndex + 1); });
+
+            // 닫기
+            closeBtn.addEventListener("click", closeModal);
+            modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+            /* ─────────────────────────────────────────
+               ⌨️ 키보드: ← → ESC
+            ───────────────────────────────────────── */
+            document.addEventListener("keydown", (e) => {
+                if (modal.style.display !== "flex") return;
+                if (e.key === "ArrowLeft"  && currentIndex > 0)                       openModal(currentIndex - 1);
+                if (e.key === "ArrowRight" && currentIndex < galleryItems.length - 1) openModal(currentIndex + 1);
+                if (e.key === "Escape") closeModal();
+            });
+
+            /* ─────────────────────────────────────────
+               📱 터치 스와이프 (모바일)
+            ───────────────────────────────────────── */
+            let touchStartX = 0;
+            let touchStartY = 0;
+
+            modal.addEventListener("touchstart", (e) => {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }, { passive: true });
+
+            modal.addEventListener("touchend", (e) => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                const dy = e.changedTouches[0].clientY - touchStartY;
+
+                // 수평 스와이프가 수직보다 클 때만 처리 (스크롤과 구분)
+                if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+
+                if (dx < 0 && currentIndex < galleryItems.length - 1) openModal(currentIndex + 1); // 왼쪽 → 다음
+                if (dx > 0 && currentIndex > 0)                        openModal(currentIndex - 1); // 오른쪽 → 이전
+            }, { passive: true });
+
+            /* ─────────────────────────────────────────
+               🌙 다크모드 초기 세팅 & 토글
+            ───────────────────────────────────────── */
+            const savedTheme = localStorage.getItem("theme") || "light";
+            document.documentElement.setAttribute("data-theme", savedTheme);
+
+            themeToggleBtn.addEventListener("click", () => {
+                const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+                document.documentElement.setAttribute("data-theme", newTheme);
+                localStorage.setItem("theme", newTheme);
+            });
+        });
+    </script>
 </body>
 </html>
